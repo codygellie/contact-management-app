@@ -36,42 +36,42 @@ const Pagination = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="bg-white border-t border-gray-200 px-6 py-4">
+    <div className="bg-background-secondary border-t-2 border-border-primary px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Results info */}
-        <div className="flex items-center text-sm text-gray-700">
+        <div className="flex items-center text-sm text-text-secondary font-medium">
           <span>Showing</span>
-          <span className="mx-2 px-2 py-1 bg-gray-100 text-gray-900 rounded font-medium">
+          <span className="mx-2 px-3 py-1 bg-accent-beige text-text-primary border-2 border-border-primary font-bold">
             {startItem}-{endItem}
           </span>
           <span>of</span>
-          <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-900 rounded font-medium">
+          <span className="ml-2 px-3 py-1 bg-accent-green text-text-primary border-2 border-border-primary font-bold">
             {total}
           </span>
           <span className="ml-2">results</span>
         </div>
         
         {/* Pagination controls */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           {/* Previous button */}
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={!hasPrev}
-            className="w-8 h-8 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors flex items-center justify-center rounded"
+            className="pagination-btn w-10 h-10 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ChevronLeft className="w-4 h-4 text-gray-600" />
+            <ChevronLeft className="w-4 h-4 text-text-secondary" />
           </button>
 
           {/* Page numbers */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             {getPageNumbers().map((page) => (
               <button
                 key={page}
                 onClick={() => onPageChange(page)}
-                className={`w-8 h-8 text-sm font-medium transition-colors flex items-center justify-center border rounded ${
+                className={`pagination-btn w-10 h-10 text-sm font-bold ${
                   page === currentPage
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'active'
+                    : ''
                 }`}
               >
                 {page}
@@ -80,8 +80,8 @@ const Pagination = ({
             
             {/* Ellipsis if needed */}
             {totalPages > 5 && currentPage < totalPages - 2 && (
-              <div className="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white">
-                <MoreHorizontal className="w-4 h-4 text-gray-600" />
+              <div className="w-10 h-10 flex items-center justify-center border-2 border-border-primary bg-background-secondary">
+                <MoreHorizontal className="w-4 h-4 text-text-muted" />
               </div>
             )}
           </div>
@@ -90,9 +90,9 @@ const Pagination = ({
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={!hasNext}
-            className="w-8 h-8 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors flex items-center justify-center rounded"
+            className="pagination-btn w-10 h-10 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ChevronRight className="w-4 h-4 text-gray-600" />
+            <ChevronRight className="w-4 h-4 text-text-secondary" />
           </button>
         </div>
       </div>

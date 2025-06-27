@@ -63,89 +63,89 @@ const ContactForm = ({
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal max-w-md" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b-2 border-border-primary">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-bold text-text-primary">
               {contact ? 'Edit Contact' : 'Add New Contact'}
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-text-muted mt-1 font-medium">
               {contact ? 'Update contact information' : 'Enter contact details'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-accent-beige hover:scale-95 transition-all border-2 border-transparent hover:border-border-primary"
             disabled={isLoading}
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-text-secondary" />
           </button>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6">
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
-                <User className="w-4 h-4 text-gray-500" />
+              <label htmlFor="name" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
+                <User className="w-4 h-4 text-accent-green" />
                 <span>Full Name *</span>
               </label>
               <input
                 {...register('name')}
                 id="name"
                 type="text"
-                className={`input ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                className={`input ${errors.name ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
                 placeholder="Enter full name"
                 disabled={isLoading}
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600 text-left">
+                <p className="mt-2 text-sm text-red-600 text-left font-medium">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
-                <Mail className="w-4 h-4 text-gray-500" />
+              <label htmlFor="email" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
+                <Mail className="w-4 h-4 text-accent-green" />
                 <span>Email Address *</span>
               </label>
               <input
                 {...register('email')}
                 id="email"
                 type="email"
-                className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                className={`input ${errors.email ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
                 placeholder="Enter email address"
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 text-left">
+                <p className="mt-2 text-sm text-red-600 text-left font-medium">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
-                <Phone className="w-4 h-4 text-gray-500" />
+              <label htmlFor="phone" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
+                <Phone className="w-4 h-4 text-accent-green" />
                 <span>Phone Number *</span>
               </label>
               <input
                 {...register('phone')}
                 id="phone"
                 type="tel"
-                className={`input ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                className={`input ${errors.phone ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
                 placeholder="Enter phone number"
                 disabled={isLoading}
               />
               {errors.phone && (
-                <p className="mt-1 text-sm text-red-600 text-left">
+                <p className="mt-2 text-sm text-red-600 text-left font-medium">
                   {errors.phone.message}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 mt-6">
+          <div className="flex items-center justify-end space-x-4 pt-6 border-t-2 border-border-primary mt-6">
             <button
               type="button"
               onClick={onClose}

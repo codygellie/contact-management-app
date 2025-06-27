@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,37 +10,41 @@
   }
   
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-background-primary text-text-primary antialiased font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-text-primary;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium border-2 border-border-primary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-green disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
   .btn-primary {
-    @apply btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+    @apply btn bg-accent-green text-text-primary hover:scale-95 hover:shadow-brute focus:ring-accent-green;
   }
   
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    @apply btn bg-red-100 text-text-primary border-red-600 hover:scale-95 hover:shadow-brute focus:ring-red-500;
   }
   
   .btn-secondary {
-    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+    @apply btn bg-background-secondary text-text-primary hover:scale-95 hover:shadow-brute focus:ring-accent-beige;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500;
+    @apply btn bg-transparent text-text-secondary hover:bg-accent-beige hover:scale-95 focus:ring-accent-beige;
   }
   
   .input {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+    @apply block w-full px-4 py-3 border-2 border-border-primary bg-background-secondary text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green focus:border-accent-green font-medium;
   }
   
   .card {
-    @apply bg-white shadow-sm border border-gray-200 rounded-lg;
+    @apply bg-background-secondary border-2 border-border-primary shadow-brute;
   }
 
   .modal-backdrop {
@@ -46,14 +52,50 @@
   }
   
   .modal {
-    @apply bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-hidden;
+    @apply bg-background-secondary border-2 border-border-primary shadow-brute-lg max-w-md w-full max-h-[90vh] overflow-hidden;
   }
 
   .status-online {
-    @apply w-2 h-2 bg-green-500 rounded-full;
+    @apply w-3 h-3 bg-accent-green border-2 border-border-primary;
   }
 
   .status-offline {
-    @apply w-2 h-2 bg-gray-400 rounded-full;
+    @apply w-3 h-3 bg-text-muted border-2 border-border-primary;
+  }
+
+  /* Table styles */
+  .table {
+    @apply w-full border-2 border-border-primary bg-background-secondary;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left font-semibold text-text-primary border-b-2 border-border-primary bg-accent-beige;
+  }
+
+  .table td {
+    @apply px-4 py-3 text-text-secondary border-b border-border-secondary;
+  }
+
+  .table tr:hover {
+    @apply bg-accent-beige bg-opacity-30;
+  }
+
+  /* Search bar */
+  .search-bar {
+    @apply w-full px-4 py-3 border-2 border-border-primary bg-background-secondary text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green focus:border-accent-green font-medium;
+  }
+
+  /* Pagination */
+  .pagination-btn {
+    @apply px-4 py-2 border-2 border-border-primary bg-background-secondary text-text-primary hover:scale-95 hover:shadow-brute-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .pagination-btn.active {
+    @apply bg-accent-green text-text-primary;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    @apply w-8 h-8 border-2 border-border-primary border-t-accent-green rounded-full animate-spin;
   }
 }
