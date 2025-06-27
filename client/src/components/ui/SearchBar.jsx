@@ -1,51 +1,25 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Search, X } from 'lucide-react';
-import { useMemo } from 'react';
 
-const SearchBar = ({ onSearch, placeholder = "Search contacts...", className = '' }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const debouncedSearch = useCallback(
-    useMemo(
-      () => {
-        let timeoutId;
-        return (term) => {
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(() => onSearch(term), 300);
-        };
-      },
-      [onSearch]
-    ),
-    [onSearch]
-  );
-
-  const handleInputChange = useCallback((e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    debouncedSearch(value);
-  }, [debouncedSearch]);
-
-  const clearSearch = useCallback(() => {
-    setSearchTerm('');
-    onSearch('');
-  }, [onSearch]);
-
+const SearchBar = ({ value, onChange, placeholder = 'Search...', className = '' }) => {
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <Search className="h-5 w-5 text-gray-400" />
+      </div>
       <input
         type="text"
-        value={searchTerm}
-        onChange={handleInputChange}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="input pl-10 pr-10"
       />
-      {searchTerm && (
+      {value && (
         <button
-          onClick={clearSearch}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          onClick={() => onChange('')}
+          className="absolute inset-y-0 right-0 pr-3 flex items-center hover-lift-sm"
         >
-          <X className="w-4 h-4" />
+          <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
         </button>
       )}
     </div>

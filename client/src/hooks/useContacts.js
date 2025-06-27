@@ -7,21 +7,7 @@ export const useContacts = (page = 1, limit = 10, search = '') => {
     queryKey: ['contacts', page, limit, search],
     queryFn: () => contactsApi.getContacts({ page, limit, search }),
     select: (response) => {
-      const contacts = response.data || [];
-            const total = contacts.length;
-      const totalPages = Math.ceil(total / limit);
-      
-      return {
-        contacts: contacts,
-        pagination: {
-          page: page,
-          limit: limit,
-          total: total,
-          totalPages: totalPages,
-          hasNext: page < totalPages,
-          hasPrev: page > 1
-        }
-      };
+      return response.data;
     },
     keepPreviousData: true,
   });

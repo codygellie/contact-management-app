@@ -1,12 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { SocketProvider } from './contexts/SocketContext';
 import Header from './components/Header';
-import SearchBar from './components/ui/SearchBar';
 import ContactsTable from './components/ContactsTable';
-import Pagination from './components/ui/Pagination';
 import ContactForm from './components/ContactForm';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
-import LoadingSpinner from './components/ui/LoadingSpinner';
 import { 
   useContacts, 
   useCreateContact, 
@@ -14,6 +11,7 @@ import {
   useDeleteContact 
 } from './hooks/useContacts';
 import toast from 'react-hot-toast';
+import './App.css';
 
 function ContactManager() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,11 +23,13 @@ function ContactManager() {
   const limit = 10;
 
   // Queries and mutations
-  const { 
+  const {
     data: contactsData, 
     isLoading, 
     error 
   } = useContacts(currentPage, limit, searchTerm);
+
+  console.log('App - isLoading:', isLoading, 'error:', error, 'contactsData:', contactsData);
 
   const createContactMutation = useCreateContact();
   const updateContactMutation = useUpdateContact();
@@ -78,7 +78,7 @@ function ContactManager() {
       }
       setIsFormOpen(false);
       setSelectedContact(null);
-    } catch (error) {
+    } catch {
       // Error handling is done in the mutation hooks
     }
   }, [selectedContact, updateContactMutation, createContactMutation]);
@@ -91,7 +91,7 @@ function ContactManager() {
       toast.success('Contact deleted successfully');
       setIsDeleteModalOpen(false);
       setSelectedContact(null);
-    } catch (error) {
+    } catch {
       // Error handling is done in the mutation hook
     }
   }, [selectedContact, deleteContactMutation]);
@@ -139,69 +139,60 @@ function ContactManager() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Header */}
       <Header
         onAddContact={handleAddContact}
         onExportCSV={handleExportCSV}
         contactCount={pagination.total || 0}
       />
 
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card">
-          {/* Search Bar */}
-          <div className="p-6 border-b border-gray-200">
-            <SearchBar
-              onSearch={handleSearch}
-              placeholder="Search contacts by name, email, or phone..."
-              className="max-w-md"
-            />
-          </div>
-
-          {/* Contacts Table */}
-          <ContactsTable
-            contacts={contacts}
-            onEdit={handleEditContact}
-            onDelete={handleDeleteContact}
-            isLoading={isLoading}
-          />
-
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <Pagination
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
-              onPageChange={handlePageChange}
-              hasNext={pagination.hasNext}
-              hasPrev={pagination.hasPrev}
-              total={pagination.total}
-              limit={pagination.limit}
-            />
-          )}
-        </div>
+        {/* Contacts Table */}
+        <ContactsTable
+          contacts={contacts}
+          onEdit={handleEditContact}
+          onDelete={handleDeleteContact}
+          onSearch={handleSearch}
+          currentPage={currentPage}
+          totalPages={pagination.totalPages || 1}
+          onPageChange={handlePageChange}
+          searchQuery={searchTerm}
+          loading={isLoading}
+        />
       </main>
 
       {/* Contact Form Modal */}
-      <ContactForm
-        isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setSelectedContact(null);
-        }}
-        onSubmit={handleFormSubmit}
-        contact={selectedContact}
-        isLoading={createContactMutation.isLoading || updateContactMutation.isLoading}
-      />
+      {isFormOpen && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <ContactForm
+              isOpen={isFormOpen}
+              onClose={() => {
+                setIsFormOpen(false);
+                setSelectedContact(null);
+              }}
+              onSubmit={handleFormSubmit}
+              contact={selectedContact}
+              isLoading={createContactMutation.isLoading || updateContactMutation.isLoading}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setSelectedContact(null);
-        }}
-        onConfirm={handleDeleteConfirm}
-        contact={selectedContact}
-        isLoading={deleteContactMutation.isLoading}
-      />
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setSelectedContact(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+          contact={selectedContact}
+          isLoading={deleteContactMutation.isLoading}
+        />
+      )}
     </div>
   );
 }

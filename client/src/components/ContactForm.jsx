@@ -15,6 +15,10 @@ const schema = yup.object({
     .string()
     .required('Email is required')
     .email('Please enter a valid email address'),
+  phone: yup
+    .string()
+    .required('Phone number is required')
+    .matches(/^[+]?[0-9][\d]{0,15}$/, 'Please enter a valid phone number'),
 });
 
 const ContactForm = ({ 
@@ -29,7 +33,6 @@ const ContactForm = ({
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -37,17 +40,18 @@ const ContactForm = ({
       email: '',
       phone: '',
     },
+    mode: 'onChange',
   });
 
   useEffect(() => {
-    if (contact) {
-      setValue('name', contact.name);
-      setValue('email', contact.email);
-      setValue('phone', contact.phone);
-    } else {
-      reset();
+    if (isOpen) {
+      reset({
+        name: contact?.name || '',
+        email: contact?.email || '',
+        phone: contact?.phone || '',
+      });
     }
-  }, [contact, setValue, reset]);
+  }, [contact, isOpen, reset]);
 
   const handleFormSubmit = (data) => {
     onSubmit(data);
@@ -57,87 +61,109 @@ const ContactForm = ({
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal max-w-md" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {contact ? 'Edit Contact' : 'Add New Contact'}
-          </h2>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {contact ? 'Edit Contact' : 'Add New Contact'}
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              {contact ? 'Update contact information' : 'Enter contact details'}
+            </p>
+          </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            disabled={isLoading}
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <User className="w-4 h-4 inline mr-2" />
-              Name
-            </label>
-            <input
-              {...register('name')}
-              type="text"
-              className={`input ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
-              placeholder="Enter full name"
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-            )}
+        {/* Form */}
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6">
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
+                <User className="w-4 h-4 text-gray-500" />
+                <span>Full Name *</span>
+              </label>
+              <input
+                {...register('name')}
+                id="name"
+                type="text"
+                className={`input ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                placeholder="Enter full name"
+                disabled={isLoading}
+              />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600 text-left">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
+                <Mail className="w-4 h-4 text-gray-500" />
+                <span>Email Address *</span>
+              </label>
+              <input
+                {...register('email')}
+                id="email"
+                type="email"
+                className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                placeholder="Enter email address"
+                disabled={isLoading}
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600 text-left">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-x-2">
+                <Phone className="w-4 h-4 text-gray-500" />
+                <span>Phone Number *</span>
+              </label>
+              <input
+                {...register('phone')}
+                id="phone"
+                type="tel"
+                className={`input ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                placeholder="Enter phone number"
+                disabled={isLoading}
+              />
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-600 text-left">
+                  {errors.phone.message}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Mail className="w-4 h-4 inline mr-2" />
-              Email
-            </label>
-            <input
-              {...register('email')}
-              type="email"
-              className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
-              placeholder="Enter email address"
-            />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Phone className="w-4 h-4 inline mr-2" />
-              Phone
-            </label>
-            <input
-              {...register('phone')}
-              type="tel"
-              className={`input ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
-              placeholder="Enter phone number"
-            />
-            {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-end space-x-3 pt-4">
+          <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="btn-secondary px-4 py-2"
+              className="btn-secondary"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn-primary px-4 py-2"
+              className="btn-primary"
               disabled={isLoading}
             >
               {isLoading ? (
-                <>
-                  <LoadingSpinner size="sm" className="mr-2" />
-                  {contact ? 'Updating...' : 'Creating...'}
-                </>
+                <div className="flex items-center">
+                  <LoadingSpinner size="sm" />
+                  <span className="ml-2">{contact ? 'Updating...' : 'Creating...'}</span>
+                </div>
               ) : (
                 contact ? 'Update Contact' : 'Create Contact'
               )}

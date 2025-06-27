@@ -3,10 +3,49 @@ const { pool } = require('../config/database');
 class ContactController {
   static async getContacts(req, res) {
     try {
-      const [contacts] = await pool.execute(
-        'SELECT * FROM contacts ORDER BY created_at DESC'
-      );
-      res.json(contacts);
+      const { page = 1, limit = 10, search = '' } = req.query;
+      
+      const currentPage = Math.max(1, Number(page) || 1);
+      const limitValue = Math.max(1, Math.min(100, Number(limit) || 10));
+      const offset = Math.max(0, (currentPage - 1) * limitValue);
+      
+      console.log('Debug - Query params:', { page, limit, search });
+      console.log('Debug - Processed values:', { currentPage, limitValue, offset });
+      
+      let query = 'SELECT * FROM contacts';
+      let countQuery = 'SELECT COUNT(*) as total FROM contacts';
+      let params = [];
+      let countParams = [];
+      
+      if (search && search.trim()) {
+        const searchTerm = `%${search.trim()}%`;
+        query += ' WHERE name LIKE ? OR email LIKE ? OR phone LIKE ?';
+        countQuery += ' WHERE name LIKE ? OR email LIKE ? OR phone LIKE ?';
+        params = [searchTerm, searchTerm, searchTerm];
+        countParams = [searchTerm, searchTerm, searchTerm];
+      }
+      
+      query += ` ORDER BY created_at DESC LIMIT ${limitValue} OFFSET ${offset}`;
+
+      
+      const [countResult] = await pool.execute(countQuery, countParams);
+      const total = countResult[0].total;
+      
+      const [contacts] = await pool.execute(query, params);
+      
+      const totalPages = Math.ceil(total / limitValue);
+      
+      res.json({
+        contacts,
+        pagination: {
+          page: currentPage,
+          limit: limitValue,
+          total,
+          totalPages,
+          hasNext: currentPage < totalPages,
+          hasPrev: currentPage > 1
+        }
+      });
     } catch (error) {
       console.error('Error fetching contacts:', error);
       res.status(500).json({ error: 'Failed to fetch contacts' });
@@ -92,7 +131,6 @@ class ContactController {
     try {
       const { id } = req.params;
 
-      // Get the contact before deleting (for the event)
       const [contactToDelete] = await pool.execute(
         'SELECT * FROM contacts WHERE id = ?',
         [id]
@@ -107,7 +145,6 @@ class ContactController {
         [id]
       );
 
-      // Emit real-time update to ALL connected clients
       console.log('Broadcasting contactDeleted event:', { id: parseInt(id), contact: contactToDelete[0] });
       req.io.emit('contactDeleted', { 
         id: parseInt(id),
