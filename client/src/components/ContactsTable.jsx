@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
-import { Edit, Trash2, Phone, Mail, MapPin, User, Search } from 'lucide-react';
+import { Edit, Trash2, Phone, Mail, MapPin, User } from 'lucide-react';
 import LoadingSpinner from './ui/LoadingSpinner';
 import Pagination from './ui/Pagination';
+import SearchBar from './ui/SearchBar';
 
 const ContactsTable = ({ 
   contacts, 
@@ -54,16 +55,11 @@ const ContactsTable = ({
     <div className="card">
       {/* Search Bar */}
       <div className="p-6 border-b-2 border-border-primary">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-muted" />
-          <input
-            type="text"
-            placeholder="Search contacts by name, email, or phone..."
-            value={searchQuery}
-            onChange={(e) => onSearch(e.target.value)}
-            className="search-bar pl-12"
-          />
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={onSearch}
+          placeholder="Search contacts by name, email, or phone..."
+        />
       </div>
 
       {/* No results state or Table */}

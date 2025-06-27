@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { X, User, Mail, Phone } from 'lucide-react';
 import LoadingSpinner from './ui/LoadingSpinner';
+import Input from './ui/Input';
 
 const schema = yup.object({
   name: yup
@@ -84,65 +85,34 @@ const ContactForm = ({
         {/* Form */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6">
           <div className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
-                <User className="w-4 h-4 text-accent-green" />
-                <span>Full Name *</span>
-              </label>
-              <input
-                {...register('name')}
-                id="name"
-                type="text"
-                className={`input ${errors.name ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
-                placeholder="Enter full name"
-                disabled={isLoading}
-              />
-              {errors.name && (
-                <p className="mt-2 text-sm text-red-600 text-left font-medium">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
+            <Input
+              label="Full Name *"
+              icon={User}
+              {...register('name')}
+              placeholder="Enter full name"
+              disabled={isLoading}
+              error={errors.name?.message}
+            />
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
-                <Mail className="w-4 h-4 text-accent-green" />
-                <span>Email Address *</span>
-              </label>
-              <input
-                {...register('email')}
-                id="email"
-                type="email"
-                className={`input ${errors.email ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
-                placeholder="Enter email address"
-                disabled={isLoading}
-              />
-              {errors.email && (
-                <p className="mt-2 text-sm text-red-600 text-left font-medium">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
+            <Input
+              label="Email Address *"
+              icon={Mail}
+              {...register('email')}
+              type="email"
+              placeholder="Enter email address"
+              disabled={isLoading}
+              error={errors.email?.message}
+            />
 
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-text-primary mb-3 flex items-center gap-x-2">
-                <Phone className="w-4 h-4 text-accent-green" />
-                <span>Phone Number *</span>
-              </label>
-              <input
-                {...register('phone')}
-                id="phone"
-                type="tel"
-                className={`input ${errors.phone ? 'border-red-600 focus:border-red-600 focus:ring-red-500' : ''}`}
-                placeholder="Enter phone number"
-                disabled={isLoading}
-              />
-              {errors.phone && (
-                <p className="mt-2 text-sm text-red-600 text-left font-medium">
-                  {errors.phone.message}
-                </p>
-              )}
-            </div>
+            <Input
+              label="Phone Number *"
+              icon={Phone}
+              {...register('phone')}
+              type="tel"
+              placeholder="Enter phone number"
+              disabled={isLoading}
+              error={errors.phone?.message}
+            />
           </div>
 
           <div className="flex items-center justify-end space-x-4 pt-6 border-t-2 border-border-primary mt-6">
