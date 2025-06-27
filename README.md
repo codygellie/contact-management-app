@@ -2,24 +2,6 @@
 
 This repository contains a full-stack **Contact Management** application built with **React** and **Tailwind CSS** on the client-side, and **Express.js** for the server-side API.
 
----
-
-## 📚 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Application](#running-the-application)
-    - [Server](#server)
-    - [Client](#client)
-- [Project Structure](#project-structure)
-- [License](#license)
-
----
-
 ## 🔍 Overview
 
 This application allows users to manage their personal contact list through a simple and intuitive interface. Users can **add**, **view**, **update**, and **delete** contacts.
@@ -34,7 +16,6 @@ The frontend communicates with a RESTful API built with Express.js. It follows a
 - 📄 **View Contacts** – Display a list of saved contacts  
 - ✏️ **Update Contact** – Modify existing contact information  
 - 🗑 **Delete Contact** – Remove contacts from the list  
-- 📱 **Responsive Design** – Adapts beautifully to all screen sizes  
 
 ---
 
@@ -49,8 +30,8 @@ The frontend communicates with a RESTful API built with Express.js. It follows a
 
 - **Node.js** – JavaScript runtime  
 - **Express.js** – Web framework for Node.js  
-
-> 💡 *(Optional: Add a database like MySQL, PostgreSQL, or MongoDB.)*
+- **MySQL** – Relational database  
+- **Socket.IO** – Real-time communication  
 
 ---
 
@@ -62,6 +43,7 @@ Follow these steps to run the project locally for development and testing.
 
 - Node.js (LTS version recommended)  
 - npm or yarn package manager  
+- MySQL database (e.g. XAMPP, TiDB, or remote MySQL server)
 
 ---
 
@@ -84,7 +66,7 @@ Follow these steps to run the project locally for development and testing.
 3. **Install frontend dependencies**
 
     ```bash
-    cd ../client
+    cd client
     npm install
     ```
 
