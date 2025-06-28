@@ -14,18 +14,10 @@ const server = http.createServer(app);
 // Fixed CORS configuration for Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173", // Vite default port
-      "http://localhost:4173", // Vite preview port
-      process.env.CLIENT_URL
-    ].filter(Boolean), // Remove any undefined values
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  }
+    origin: '*',},
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4001;
 
 app.use(helmet());
 
@@ -33,8 +25,12 @@ app.use(helmet());
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "http://localhost:5173", // Vite default port
-    "http://localhost:4173", // Vite preview port
+    "http://localhost:5173", 
+    "http://localhost:4173", 
+    "http://10.10.8.27:5000",
+    "http://10.10.8.27:3000",
+    "http://10.10.8.27:5173",
+    /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/,
     process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true
@@ -48,7 +44,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Root route - API info
 app.get('/', (req, res) => {
   res.json({
     message: 'Contact Management API',
@@ -122,11 +117,11 @@ async function startServer() {
   try {
     await initDatabase();
     
-    server.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
-      console.log(`API available at: http://localhost:${PORT}`);
       console.log(`Socket.io enabled for real-time updates`);
-      console.log(`CORS enabled for frontend connections`);
+      console.log(`CORS enabled for frontend connections (including network IPs)`);
+      console.log(`Server listening on all network interfaces (0.0.0.0)`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

@@ -20,16 +20,25 @@ export const SocketProvider = ({ children }) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Use the correct socket server URL (should match your backend server)
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const getSocketUrl = () => {
+      const currentHost = window.location.hostname;
+      const backendPort = 4001;
+      const url = `http://${currentHost}:${backendPort}`;
+      return url;
+    };
     
-    console.log('🔌 Connecting to socket server:', socketUrl);
+    const socketUrl = getSocketUrl();
+    console.log('Connecting to socket server:', socketUrl);
+    console.log('Current hostname for socket:', window.location.hostname);
     
     const socketInstance = io(socketUrl, {
-      // Add these options for better connection reliability
       transports: ['websocket', 'polling'],
       timeout: 20000,
-      forceNew: true
+      forceNew: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000
     });
 
     socketInstance.on('connect', () => {
@@ -40,35 +49,34 @@ export const SocketProvider = ({ children }) => {
 
     socketInstance.on('disconnect', (reason) => {
       setIsConnected(false);
-      console.log('❌ Disconnected from socket server:', reason);
+      console.log('Disconnected from socket server:', reason);
       if (reason === 'io server disconnect') {
-        // Server disconnected, try to reconnect
         socketInstance.connect();
       }
     });
 
     socketInstance.on('connect_error', (error) => {
-      console.error('🔥 Socket connection error:', error);
+      console.error(' Socket connection error:', error);
       toast.error('Failed to connect to real-time updates');
     });
 
     // Listen for the CORRECT event names (matching your backend)
     socketInstance.on('contactCreated', (contact) => {
-      console.log('📝 Contact created via socket:', contact);
+      console.log('Contact created via socket:', contact);
       queryClient.invalidateQueries(['contacts']);
-      toast.success(`${contact.name} was added by another user`);
+      toast.success(`${contact.name} was added`);
     });
 
     socketInstance.on('contactUpdated', (contact) => {
-      console.log('✏️ Contact updated via socket:', contact);
+      console.log(' Contact updated via socket:', contact);
       queryClient.invalidateQueries(['contacts']);
-      toast.success(`${contact.name} was updated by another user`);
+      toast.success(`${contact.name} was updated`);
     });
 
     socketInstance.on('contactDeleted', (data) => {
       console.log(' Contact deleted via socket:', data);
       queryClient.invalidateQueries(['contacts']);
-      toast.success('A contact was deleted by another user');
+      toast.success('A contact was deleted');
     });
 
     setSocket(socketInstance);

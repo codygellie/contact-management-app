@@ -73,7 +73,7 @@ class ContactController {
       );
 
       // Emit real-time update to ALL connected clients
-      console.log('📡 Broadcasting contactCreated event:', newContact[0]);
+      console.log('Broadcasting contactCreated event:', newContact[0]);
       req.io.emit('contactCreated', newContact[0]);
 
       res.status(201).json(newContact[0]);
@@ -113,7 +113,7 @@ class ContactController {
       );
 
       // Emit real-time update to ALL connected clients
-      console.log('📡 Broadcasting contactUpdated event:', updatedContact[0]);
+      console.log('Broadcasting contactUpdated event:', updatedContact[0]);
       req.io.emit('contactUpdated', updatedContact[0]);
 
       res.json(updatedContact[0]);
