@@ -1,21 +1,21 @@
 import axios from 'axios';
 
-const getApiBaseUrl = () => {
-  const currentHost = window.location.hostname;
-  const backendPort = 4001;
-  
-  return `http://${currentHost}:${backendPort}`;
-};
+const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL;
+const backendPort = import.meta.env.VITE_BACKEND_PORT || 4001;
 
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = backendApiUrl
+  ? backendApiUrl.endsWith('/api')
+    ? backendApiUrl
+    : backendApiUrl + '/api'
+  : `http://localhost:${backendPort}/api`;
 
 console.log('API Base URL:', API_BASE_URL);
-console.log('Current Hostname:', window.location.hostname);
 
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
   },
 });
 

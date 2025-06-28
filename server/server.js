@@ -31,6 +31,8 @@ app.use(cors({
     "http://10.10.8.27:3000",
     "http://10.10.8.27:5173",
     /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/,
+    /^https:\/\/.*\.ngrok-free\.app$/,
+    /^https:\/\/.*\.ngrok\.io$/,
     process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true

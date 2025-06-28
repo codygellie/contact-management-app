@@ -20,16 +20,14 @@ export const SocketProvider = ({ children }) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const getSocketUrl = () => {
-      const currentHost = window.location.hostname;
-      const backendPort = 4001;
-      const url = `http://${currentHost}:${backendPort}`;
-      return url;
-    };
-    
-    const socketUrl = getSocketUrl();
+    const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL;
+    const backendPort = import.meta.env.VITE_BACKEND_PORT || 4001;
+
+    const socketUrl = backendApiUrl
+      ? backendApiUrl.replace(/\/api$/, '')
+      : `http://localhost:${backendPort}`;
+
     console.log('Connecting to socket server:', socketUrl);
-    console.log('Current hostname for socket:', window.location.hostname);
     
     const socketInstance = io(socketUrl, {
       transports: ['websocket', 'polling'],
